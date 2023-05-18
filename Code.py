@@ -73,7 +73,13 @@ def create_model(selected_features):
 def fitness_function(selected_features):
     model = create_model(selected_features)
     model.compile(loss='categorical_crossentropy', optimizer=Adam(), metrics=['accuracy'])
-    model.fit(train_generator, epochs=5, verbose=0)
+
+    # Provide the input data for the model
+    feed_dict = {
+        'Placeholder/_0': train_generator.next()[0]
+    }
+
+    model.fit(feed_dict=feed_dict, epochs=5, verbose=1)
     y_true = test_generator.classes
     y_pred = model.predict(test_generator).argmax(axis=1)
     accuracy = accuracy_score(y_true, y_pred)
